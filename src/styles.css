@@ -19,7 +19,7 @@ img { max-width: 100%; display: block; }
 .header-actions { padding-left: 14px; display: flex; align-items: center; gap: 8px; border-left: 1px solid var(--border); }
 .account-control { min-height: 38px; padding: 7px 13px; border: 1px solid var(--blue); border-radius: 10px; color: var(--blue); background: white; font-size: 14px; font-weight: 800; }
 .register-control { color: white; background: var(--blue); }
-.menu-trigger { width: 40px; height: 40px; padding: 9px; display: grid; align-content: center; gap: 4px; border: 0; border-radius: 8px; background: #07589d; }
+.menu-trigger { width: 40px; height: 40px; padding: 9px; display: none; align-content: center; gap: 4px; border: 0; border-radius: 8px; background: #07589d; }
 .menu-trigger span { display: block; width: 22px; height: 3px; border-radius: 999px; background: white; }
 .hero { padding: 88px 0 74px; background: radial-gradient(circle at 78% 35%, rgba(255,101,0,.11), transparent 34%), linear-gradient(180deg, #fff 0%, #fffaf7 100%); border-radius: 0 0 42px 42px; }
 .hero-inner { width: min(1130px, calc(100% - 48px)); margin: auto; display: grid; grid-template-columns: .95fr 1.05fr; gap: 58px; align-items: center; }
@@ -217,6 +217,7 @@ blockquote { margin: 30px 0; padding: 24px; border-radius: 18px; color: white; b
 .mobile-drawer p { margin-top: auto; color: var(--muted); font-size: 12px; line-height: 1.6; }
 @media (max-width: 1040px) {
   .desktop-nav { display: none; }
+  .menu-trigger { display: grid; }
   .header-actions { margin-left: auto; }
   .hero-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
   .hero-copy h1 { font-size: 52px; }
