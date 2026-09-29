@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const basePath = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL.replace(/\/$/, '')
 const asset = (name) => `${import.meta.env.BASE_URL}assets/${name}`
@@ -70,7 +70,7 @@ function useRoute() {
   return { path, navigate }
 }
 
-function Header({ path, navigate, onSearch }) {
+function Header({ path, navigate }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const links = [['首頁', '/'], ['娛樂城推薦', '/casino-recommendations'], ['娛樂城攻略', '/blog'], ['遊戲攻略', '/#games'], ['2026 世界盃', '/#worldcup'], ['3A 專區', '/3a']]
   const go = (href) => {
@@ -82,23 +82,12 @@ function Header({ path, navigate, onSearch }) {
   const active = (label) => (label === '首頁' && path === '/') || (label === '娛樂城推薦' && path === '/casino-recommendations') || (label === '娛樂城攻略' && path.startsWith('/blog')) || (label === '3A 專區' && path === '/3a')
   return <>
     <header className="site-header"><div className="header-inner">
-      <button className="brand" onClick={() => go('/')} aria-label="回到首頁"><img src={asset('brand-logo-3a.png')} alt="3A 遊戲城" /></button>
+      <button className="brand" onClick={() => go('/')} aria-label="回到首頁"><img src={asset('brand-symbol.png')} alt="" /></button>
       <nav className="desktop-nav" aria-label="主要導覽">{links.map(([label, href]) => <button key={label} className={`${active(label) ? 'active' : ''} ${label === '3A 專區' ? 'threea-link' : ''}`} onClick={() => go(href)}>{label}</button>)}</nav>
-      <div className="header-actions"><button className="header-control" onClick={onSearch}>搜尋</button><button className="header-control menu-trigger" onClick={() => setMenuOpen(true)}>選單</button></div>
+      <div className="header-actions"><button className="account-control login-control" type="button">登入</button><button className="account-control register-control" type="button">註冊</button><button className="menu-trigger" type="button" aria-label="開啟選單" onClick={() => setMenuOpen(true)}><span /><span /><span /></button></div>
     </div></header>
     {menuOpen && <div className="drawer-layer" role="dialog" aria-modal="true" aria-label="行動版選單"><button className="drawer-backdrop" aria-label="關閉選單" onClick={() => setMenuOpen(false)} /><aside className="mobile-drawer"><div className="drawer-head"><strong>內容導覽</strong><button onClick={() => setMenuOpen(false)}>關閉</button></div>{links.map(([label, href]) => <button key={label} className={label === '3A 專區' ? 'featured' : ''} onClick={() => go(href)}>{label}</button>)}<p>本站僅供 18 歲以上人士瀏覽，請理性娛樂、量力而為。</p></aside></div>}
   </>
-}
-
-function SearchOverlay({ navigate, onClose }) {
-  const [query, setQuery] = useState('')
-  const results = useMemo(() => articles.filter((item) => `${item.title}${item.category}${item.excerpt}`.toLowerCase().includes(query.trim().toLowerCase())), [query])
-  useEffect(() => {
-    const onKey = (event) => event.key === 'Escape' && onClose()
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
-  return <div className="search-layer" role="dialog" aria-modal="true" aria-label="站內搜尋"><div className="search-panel"><div className="search-head"><strong>搜尋攻略與評價</strong><button onClick={onClose}>關閉</button></div><label htmlFor="search-input">輸入關鍵字</label><input id="search-input" autoFocus value={query} onChange={(e) => setQuery(e.target.value)} placeholder="例如：USDT、世界盃、百家樂" /><div className="search-results">{query && results.length === 0 && <p>找不到相符文章，請換個關鍵字。</p>}{query && results.slice(0, 5).map((item) => <button key={item.id} onClick={() => { onClose(); navigate(`/blog/${item.id}`) }}><span>{item.category}</span><strong>{item.title}</strong></button>)}</div></div></div>
 }
 
 function SectionHeader({ label, title, description, action }) {
@@ -106,7 +95,7 @@ function SectionHeader({ label, title, description, action }) {
 }
 
 function Hero({ navigate }) {
-  return <section className="hero"><div className="hero-inner"><div className="hero-copy"><span className="eyebrow">3A GAME INFORMATION PORTAL</span><h1><span>3A 遊戲城</span>娛樂資訊專區</h1><i className="orange-rule" aria-hidden="true" /><p>本站提供娛樂城評價、現金版推薦、世界盃即時比分、USDT 娛樂城教學與玩家真實討論內容，協助讀者快速掌握熱門娛樂平台與最新賽事資訊。</p><div className="button-row"><button className="button primary" onClick={() => navigate('/casino-recommendations')}>查看娛樂城推薦</button><button className="button secondary" onClick={() => document.getElementById('games')?.scrollIntoView({ behavior: 'smooth' })}>熱門遊戲攻略</button></div><div className="topic-cards"><button onClick={() => navigate('/casino-recommendations')}><strong>娛樂城</strong><small>評價與推薦</small></button><button onClick={() => document.getElementById('worldcup')?.scrollIntoView({ behavior: 'smooth' })}><strong>世界盃</strong><small>即時比分與賽事</small></button><button onClick={() => document.getElementById('crypto')?.scrollIntoView({ behavior: 'smooth' })}><strong>USDT</strong><small>加密娛樂城指南</small></button><button onClick={() => navigate('/blog')}><strong>論壇</strong><small>玩家經驗交流</small></button></div><p className="legal-note">提醒：請遵守所在地法律規範，年滿合法年齡並量力而為。</p></div><div className="hero-image"><img src={asset('portal-hero.webp')} alt="戰神賽特電子遊戲主視覺" /></div></div></section>
+  return <section className="hero"><div className="hero-inner"><div className="hero-copy"><span className="eyebrow">GAME INFORMATION PORTAL</span><h1><span>熱門遊戲</span>娛樂資訊專區</h1><i className="orange-rule" aria-hidden="true" /><p>本站提供娛樂城評價、現金版推薦、世界盃即時比分、USDT 娛樂城教學與玩家真實討論內容，協助讀者快速掌握熱門娛樂平台與最新賽事資訊。</p><div className="button-row"><button className="button primary" onClick={() => navigate('/casino-recommendations')}>查看娛樂城推薦</button><button className="button secondary" onClick={() => document.getElementById('games')?.scrollIntoView({ behavior: 'smooth' })}>熱門遊戲攻略</button></div><div className="topic-cards"><button onClick={() => navigate('/casino-recommendations')}><strong>娛樂城</strong><small>評價與推薦</small></button><button onClick={() => document.getElementById('worldcup')?.scrollIntoView({ behavior: 'smooth' })}><strong>世界盃</strong><small>即時比分與賽事</small></button><button onClick={() => document.getElementById('crypto')?.scrollIntoView({ behavior: 'smooth' })}><strong>USDT</strong><small>加密娛樂城指南</small></button><button onClick={() => navigate('/blog')}><strong>論壇</strong><small>玩家經驗交流</small></button></div><p className="legal-note">提醒：請遵守所在地法律規範，年滿合法年齡並量力而為。</p></div><div className="hero-image"><img src={asset('portal-hero.webp')} alt="戰神賽特電子遊戲主視覺" /></div></div></section>
 }
 
 function CasinoCard({ casino, navigate }) {
@@ -188,17 +177,15 @@ function ThreeAPage({ navigate }) {
 }
 
 function Footer({ navigate }) {
-  return <footer className="site-footer"><div className="footer-inner"><div><img src={asset('brand-logo-3a.png')} alt="3A 遊戲城" /><p>3A 遊戲城 · 娛樂資訊專區<br />專注於娛樂城與遊戲資訊，協助成年讀者理性了解、審慎判斷。</p><span className="age-note">18+ 本站僅供 18 歲以上人士瀏覽</span></div><div><strong>探索</strong><button onClick={() => navigate('/casino-recommendations')}>娛樂城推薦</button><button onClick={() => navigate('/blog')}>娛樂城攻略</button><button onClick={() => navigate('/blog')}>遊戲攻略</button><button onClick={() => navigate('/3a')}>3A 專區</button></div><div><strong>關於本站</strong><button>關於我們</button><button>免責聲明</button><button>負責任博弈</button><button>隱私政策</button></div><div><strong>聯絡我們</strong><p>指正、意見或合作洽詢，請以官方公告的聯絡管道為準。</p><p>沉迷博弈可能造成傷害。如需協助，請撥打台灣 1925 安心專線。</p></div></div><div className="footer-bottom">© 2026 3A 遊戲城 UI Prototype．本站僅提供資訊，不經營博弈、不代收下注。</div></footer>
+  return <footer className="site-footer"><div className="footer-inner"><div><img src={asset('brand-symbol.png')} alt="網站標誌" /><p>娛樂資訊專區<br />專注於娛樂城與遊戲資訊，協助成年讀者理性了解、審慎判斷。</p><span className="age-note">18+ 本站僅供 18 歲以上人士瀏覽</span></div><div><strong>探索</strong><button onClick={() => navigate('/casino-recommendations')}>娛樂城推薦</button><button onClick={() => navigate('/blog')}>娛樂城攻略</button><button onClick={() => navigate('/blog')}>遊戲攻略</button><button onClick={() => navigate('/3a')}>3A 專區</button></div><div><strong>關於本站</strong><button>關於我們</button><button>免責聲明</button><button>負責任博弈</button><button>隱私政策</button></div><div><strong>聯絡我們</strong><p>指正、意見或合作洽詢，請以官方公告的聯絡管道為準。</p><p>沉迷博弈可能造成傷害。如需協助，請撥打台灣 1925 安心專線。</p></div></div><div className="footer-bottom">© 2026 娛樂資訊原型．本站僅提供資訊，不經營博弈、不代收下注。</div></footer>
 }
 
 export function App() {
   const { path, navigate } = useRoute()
-  const [searchOpen, setSearchOpen] = useState(false)
-  useEffect(() => { document.body.style.overflow = searchOpen ? 'hidden' : ''; return () => { document.body.style.overflow = '' } }, [searchOpen])
   let page = <HomePage navigate={navigate} />
   if (path === '/blog') page = <BlogPage navigate={navigate} />
   else if (path.startsWith('/blog/')) page = <ArticlePage id={path.split('/').pop()} navigate={navigate} />
   else if (path === '/casino-recommendations') page = <CasinoRecommendationsPage navigate={navigate} />
   else if (path === '/3a') page = <ThreeAPage navigate={navigate} />
-  return <div className="app-shell"><Header path={path} navigate={navigate} onSearch={() => setSearchOpen(true)} />{page}<Footer navigate={navigate} />{searchOpen && <SearchOverlay navigate={navigate} onClose={() => setSearchOpen(false)} />}</div>
+  return <div className="app-shell"><Header path={path} navigate={navigate} />{page}<Footer navigate={navigate} /></div>
 }
