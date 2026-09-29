@@ -1,4 +1,4 @@
-# Design QA — 3A 娛樂資訊原型
+# Design QA — 娛樂資訊原型
 
 ## Visual truth and scope
 
@@ -7,7 +7,7 @@
 - Mobile source capture: `source-wager-mobile.png`
 - Supporting content/IA evidence: `C:\Users\user\Desktop\PP\二站\wager-style-spec.md`
 - 3A-only visual reference: `C:\Users\user\Desktop\PP\二站\18-3a-home-desktop.png` and `C:\Users\user\Desktop\PP\二站\24-3a-home-mobile.png`
-- Implemented routes checked: `/`, `/casino-recommendations`, `/blog`, `/blog/usdt-guide`, `/blog/richgame`, `/3a`
+- Implemented routes checked: `/`, `/casino-recommendations`, `/blog`, `/blog/usdt-guide`, `/blog/richgame`, `/about`
 
 ## Captures and normalization
 
@@ -15,8 +15,8 @@
 | --- | ---: | ---: | ---: | --- |
 | Wager-style home desktop | 1280 × 720 | 1265 × 712 | 1265 × 712 | `qa-wager-compare-desktop.png` |
 | Wager-style home mobile | 390 × 844 | 375 × 812 | 375 × 812 | `qa-wager-compare-mobile.png` |
-| 3A desktop | 1280 × 720 | — | 1265 × 712 | `qa-wager-3a-desktop.png` |
-| 3A mobile | 390 × 844 | — | 375 × 812 | `qa-wager-3a-mobile.png` |
+| About desktop | 1280 × 720 | — | responsive | current implementation |
+| About mobile | 390 × 844 | — | responsive | current implementation |
 | Minimal symbol in header | Header crop | 1024 × 1024 | responsive contain | current implementation |
 | Entertainment recommendations desktop | 1680 × 918 | — | 1680 × 918 | `qa-recommendations-desktop.png` |
 | Entertainment recommendations mobile | 390 × 844 capture | — | responsive stack | `qa-recommendations-mobile.png` |
@@ -27,23 +27,23 @@ Source and implementation captures use identical browser viewport settings and d
 
 - Typography: the local SF Pro Display font, Chinese fallback, heavy black headings, orange eyebrow labels, and paragraph scale reproduce the source hierarchy. Mobile body copy was enlarged so line breaks and vertical rhythm match the source first screen.
 - Spacing and layout: the desktop two-column hero, 1130–1160 px content width, 62–70 px header, four information cards, section spacing, and mobile single-column stack align with the source. No overlap or horizontal page overflow was found at 390, 768, 1024, or 1280 px.
-- Colors and tokens: warm white, black/gray typography, `#ff6500` orange actions, subtle warm shadows, dark navy feature regions, and dark footer now define the global system. Blue is intentionally limited to the 3A nav state and 3A surfaces.
+- Colors and tokens: warm white, black/gray typography, `#ff6500` orange actions, subtle warm shadows, dark navy feature regions, and dark footer define the global system. Blue accents identify the account controls and About page.
 - Image quality: a compact transparent cyan-and-blue symbol is bundled locally and used in the header and footer. The hero, three casino brands, nine game covers, and local font remain served locally. No hotlinked or placeholder assets remain.
-- Copy and content: all visible legacy brand mentions were removed from the application and production bundle. Homepage, article library, article detail, footer, 3A, and the new independent entertainment-recommendations page now use 3A or neutral editorial language.
+- Copy and content: all visible legacy brand mentions were removed from the application and production bundle. Homepage, article library, article detail, footer, About page, and the independent entertainment-recommendations page use neutral editorial language.
 - Accessibility: semantic navigation, headings, tablist, dialogs, labels, FAQ expanded states, focus outlines, meaningful alt text, decorative empty alt text, practical touch targets, and reduced-motion handling are present.
 - Focused comparison: the desktop and mobile hero/header regions are readable at native size in both composite files. `qa-logo-compare.png` adds a dedicated source-versus-header crop for the replacement logo; the smaller rendered version shows only expected raster downscaling.
 - Console: a fresh browser session produced no warnings or errors.
 
 ## Primary interactions tested
 
-- Mobile drawer exposes all editorial sections plus 3A and navigates home.
+- Mobile drawer exposes all editorial sections plus About and navigates home.
 - `娛樂城推薦` opens the independent `/casino-recommendations` route from the header, homepage and footer.
 - The recommendations page contains review criteria, ranking cards, a comparison table, checklist, FAQ and article CTA.
 - Header exposes the requested login, registration, and menu controls; search has been removed.
 - Blog category tab `娛樂城評價` becomes selected and filters to two cards.
 - Casino primary CTA routes to `/blog/richgame`.
 - FAQ updates `aria-expanded` and reveals its answer.
-- 3A route, homepage section links, article pages, and in-page navigation render correctly.
+- About route, homepage section links, article pages, and in-page navigation render correctly.
 
 ## Comparison history
 
