@@ -1,32 +1,41 @@
 import { useEffect, useMemo, useState } from 'react'
 
+const basePath = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL.replace(/\/$/, '')
+const asset = (name) => `${import.meta.env.BASE_URL}assets/${name}`
+const currentPath = () => {
+  const pathname = window.location.pathname
+  if (!basePath) return pathname
+  const path = pathname.startsWith(basePath) ? pathname.slice(basePath.length) : pathname
+  return path || '/'
+}
+
 const casinos = [
-  { rank: '1', name: '富遊娛樂城', image: '/assets/casino-richgame.webp', intro: '台灣熱門現金版娛樂城，提供真人百家樂、體育投注、電子遊戲與多元娛樂內容，適合重視出金速度的玩家。', facts: [['平台類型', '現金版娛樂城'], ['提款速度', '約 5–8 分鐘'], ['遊戲內容', '真人、體育、電子'], ['玩家評價', '4.8 / 5']] },
-  { rank: '2', name: 'Maispin 邁斯', image: '/assets/casino-maispin.webp', intro: '主打 USDT 存提款與加密貨幣娛樂城體驗，適合熟悉錢包操作、重視交易速度與隱私的玩家。', facts: [['平台類型', 'USDT 娛樂城'], ['付款方式', 'USDT / TRC20'], ['遊戲內容', '真人、體育、電子'], ['玩家評價', '4.9 / 5']] },
-  { rank: '3', name: 'Bet365', image: '/assets/casino-bet365.webp', intro: '國際知名博彩品牌，主打體育投注與賽事盤口，適合偏好運彩、足球、籃球與國際賽事投注的玩家。', facts: [['平台類型', '國際博彩平台'], ['主要特色', '體育投注'], ['遊戲內容', '運彩、真人、電子'], ['玩家評價', '4.7 / 5']] },
+  { rank: '1', name: '富遊娛樂城', image: asset('casino-richgame.webp'), intro: '台灣熱門現金版娛樂城，提供真人百家樂、體育投注、電子遊戲與多元娛樂內容，適合重視出金速度的玩家。', facts: [['平台類型', '現金版娛樂城'], ['提款速度', '約 5–8 分鐘'], ['遊戲內容', '真人、體育、電子'], ['玩家評價', '4.8 / 5']] },
+  { rank: '2', name: 'Maispin 邁斯', image: asset('casino-maispin.webp'), intro: '主打 USDT 存提款與加密貨幣娛樂城體驗，適合熟悉錢包操作、重視交易速度與隱私的玩家。', facts: [['平台類型', 'USDT 娛樂城'], ['付款方式', 'USDT / TRC20'], ['遊戲內容', '真人、體育、電子'], ['玩家評價', '4.9 / 5']] },
+  { rank: '3', name: 'Bet365', image: asset('casino-bet365.webp'), intro: '國際知名博彩品牌，主打體育投注與賽事盤口，適合偏好運彩、足球、籃球與國際賽事投注的玩家。', facts: [['平台類型', '國際博彩平台'], ['主要特色', '體育投注'], ['遊戲內容', '運彩、真人、電子'], ['玩家評價', '4.7 / 5']] },
 ]
 
 const games = [
-  { id: 'seth', no: '01', name: '戰神賽特', image: '/assets/slot-seth.webp', intro: '消除掉落、無賠付線玩法，最高 51000 倍，RTP 95.89%。', tags: ['高倍率', '免費旋轉'] },
-  { id: 'lubu', no: '02', name: '戰神呂布', image: '/assets/slot-lubu.webp', intro: '三國主題消除掉落老虎機，最高 51000 倍，RTP 97.90%。', tags: ['三國主題', '消除掉落'] },
-  { id: 'wuzetian', no: '03', name: '武媚娘', image: '/assets/slot-wuzetian.webp', intro: '女帝主題 50 線玩法，結合鎖定、延展、倍數與重轉特色。', tags: ['女帝主題', '重轉玩法'] },
-  { id: 'thor', no: '04', name: '雷神之鎚', image: '/assets/slot-thor.webp', intro: '雷神主題全版倍數玩法，最高 500 倍符號、最大獎 51000 倍。', tags: ['全版倍數', '高人氣'] },
-  { id: 'alice', no: '05', name: '跑跑愛麗絲', image: '/assets/slot-alice.webp', intro: '橫軸跑酷電子遊戲，收集糖果、累積獎金與 BONUS 能量條。', tags: ['跑酷玩法', '街機風格'] },
-  { id: '72', no: '06', name: '72變', image: '/assets/slot-72.webp', intro: '孫悟空火焰山主題，故事型 1024 路老虎機，最高 6400 倍。', tags: ['孫悟空', '1024路'] },
-  { id: 'alien', no: '07', name: '異星進化 UPUP', image: '/assets/slot-alien.webp', intro: '科幻主題相鄰連線玩法，RTP 97.98%，最高 100000 倍大獎。', tags: ['超高倍率', '科幻主題'] },
-  { id: 'ninja', no: '08', name: '忍', image: '/assets/slot-ninja.webp', intro: '日本忍者風格，無賠付線、全版倍數與消除掉落玩法。', tags: ['忍者主題', '51000x'] },
-  { id: 'homerun', no: '09', name: '強棒 HOMERUN', image: '/assets/slot-homerun.webp', intro: '棒球主題電子遊戲，20 條賠付線、神秘物件與百搭符號。', tags: ['棒球主題', '新遊戲'] },
+  { id: 'seth', no: '01', name: '戰神賽特', image: asset('slot-seth.webp'), intro: '消除掉落、無賠付線玩法，最高 51000 倍，RTP 95.89%。', tags: ['高倍率', '免費旋轉'] },
+  { id: 'lubu', no: '02', name: '戰神呂布', image: asset('slot-lubu.webp'), intro: '三國主題消除掉落老虎機，最高 51000 倍，RTP 97.90%。', tags: ['三國主題', '消除掉落'] },
+  { id: 'wuzetian', no: '03', name: '武媚娘', image: asset('slot-wuzetian.webp'), intro: '女帝主題 50 線玩法，結合鎖定、延展、倍數與重轉特色。', tags: ['女帝主題', '重轉玩法'] },
+  { id: 'thor', no: '04', name: '雷神之鎚', image: asset('slot-thor.webp'), intro: '雷神主題全版倍數玩法，最高 500 倍符號、最大獎 51000 倍。', tags: ['全版倍數', '高人氣'] },
+  { id: 'alice', no: '05', name: '跑跑愛麗絲', image: asset('slot-alice.webp'), intro: '橫軸跑酷電子遊戲，收集糖果、累積獎金與 BONUS 能量條。', tags: ['跑酷玩法', '街機風格'] },
+  { id: '72', no: '06', name: '72變', image: asset('slot-72.webp'), intro: '孫悟空火焰山主題，故事型 1024 路老虎機，最高 6400 倍。', tags: ['孫悟空', '1024路'] },
+  { id: 'alien', no: '07', name: '異星進化 UPUP', image: asset('slot-alien.webp'), intro: '科幻主題相鄰連線玩法，RTP 97.98%，最高 100000 倍大獎。', tags: ['超高倍率', '科幻主題'] },
+  { id: 'ninja', no: '08', name: '忍', image: asset('slot-ninja.webp'), intro: '日本忍者風格，無賠付線、全版倍數與消除掉落玩法。', tags: ['忍者主題', '51000x'] },
+  { id: 'homerun', no: '09', name: '強棒 HOMERUN', image: asset('slot-homerun.webp'), intro: '棒球主題電子遊戲，20 條賠付線、神秘物件與百搭符號。', tags: ['棒球主題', '新遊戲'] },
 ]
 
 const articles = [
-  { id: 'worldcup-live', category: '2026 世界盃', title: '世界盃即時比分與賽程表', excerpt: '最新比賽結果、對戰資訊與賽程持續更新。', image: '/assets/article-worldcup.webp', date: '2026.09.26', views: '12,860' },
-  { id: 'usdt-guide', category: 'USDT 娛樂城', title: 'USDT 娛樂城完整教學', excerpt: '新手入門加密娛樂城、TRC20 錢包與存提款指南。', image: '/assets/casino-maispin.webp', date: '2026.09.22', views: '8,420' },
-  { id: 'baccarat', category: '遊戲攻略', title: '百家樂玩法與投注技巧', excerpt: '真人百家樂規則、莊閒和局與牌桌資訊完整解析。', image: '/assets/game-baccarat.webp', date: '2026.09.18', views: '10,735' },
-  { id: 'cash-casino', category: '娛樂城推薦', title: '現金版娛樂城推薦', excerpt: '熱門平台、出金速度與玩家評價整理。', image: '/assets/casino-richgame.webp', date: '2026.09.15', views: '15,281' },
-  { id: 'richgame', category: '娛樂城評價', title: '富遊娛樂城出金真的快嗎？', excerpt: '玩家分享實際提款速度、遊戲內容與使用心得。', image: '/assets/casino-richgame.webp', date: '2026.09.12', views: '9,834' },
-  { id: 'maispin', category: '娛樂城評價', title: 'MAISPIN 邁斯值得玩嗎？', excerpt: 'USDT 娛樂城特色、付款方式與優缺點整理。', image: '/assets/casino-maispin.webp', date: '2026.09.08', views: '7,946' },
-  { id: 'football', category: '體育投注', title: '世界盃運彩怎麼下注？', excerpt: '足球投注玩法、讓分與大小分技巧討論。', image: '/assets/article-fifa.webp', date: '2026.09.04', views: '11,208' },
-  { id: 'rebate', category: '娛樂城攻略', title: '哪間娛樂城返水最高？', excerpt: '現金版娛樂城回饋條件與優惠比較。', image: '/assets/portal-hero.webp', date: '2026.08.30', views: '6,972' },
+  { id: 'worldcup-live', category: '2026 世界盃', title: '世界盃即時比分與賽程表', excerpt: '最新比賽結果、對戰資訊與賽程持續更新。', image: asset('article-worldcup.webp'), date: '2026.09.26', views: '12,860' },
+  { id: 'usdt-guide', category: 'USDT 娛樂城', title: 'USDT 娛樂城完整教學', excerpt: '新手入門加密娛樂城、TRC20 錢包與存提款指南。', image: asset('casino-maispin.webp'), date: '2026.09.22', views: '8,420' },
+  { id: 'baccarat', category: '遊戲攻略', title: '百家樂玩法與投注技巧', excerpt: '真人百家樂規則、莊閒和局與牌桌資訊完整解析。', image: asset('game-baccarat.webp'), date: '2026.09.18', views: '10,735' },
+  { id: 'cash-casino', category: '娛樂城推薦', title: '現金版娛樂城推薦', excerpt: '熱門平台、出金速度與玩家評價整理。', image: asset('casino-richgame.webp'), date: '2026.09.15', views: '15,281' },
+  { id: 'richgame', category: '娛樂城評價', title: '富遊娛樂城出金真的快嗎？', excerpt: '玩家分享實際提款速度、遊戲內容與使用心得。', image: asset('casino-richgame.webp'), date: '2026.09.12', views: '9,834' },
+  { id: 'maispin', category: '娛樂城評價', title: 'MAISPIN 邁斯值得玩嗎？', excerpt: 'USDT 娛樂城特色、付款方式與優缺點整理。', image: asset('casino-maispin.webp'), date: '2026.09.08', views: '7,946' },
+  { id: 'football', category: '體育投注', title: '世界盃運彩怎麼下注？', excerpt: '足球投注玩法、讓分與大小分技巧討論。', image: asset('article-fifa.webp'), date: '2026.09.04', views: '11,208' },
+  { id: 'rebate', category: '娛樂城攻略', title: '哪間娛樂城返水最高？', excerpt: '現金版娛樂城回饋條件與優惠比較。', image: asset('portal-hero.webp'), date: '2026.08.30', views: '6,972' },
 ]
 
 const guides = [
@@ -47,14 +56,14 @@ const faqItems = [
 ]
 
 function useRoute() {
-  const [path, setPath] = useState(window.location.pathname)
+  const [path, setPath] = useState(currentPath())
   useEffect(() => {
-    const update = () => setPath(window.location.pathname)
+    const update = () => setPath(currentPath())
     window.addEventListener('popstate', update)
     return () => window.removeEventListener('popstate', update)
   }, [])
   const navigate = (next) => {
-    window.history.pushState({}, '', next)
+    window.history.pushState({}, '', `${basePath}${next}`)
     setPath(next)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -73,7 +82,7 @@ function Header({ path, navigate, onSearch }) {
   const active = (label) => (label === '首頁' && path === '/') || (label === '娛樂城推薦' && path === '/casino-recommendations') || (label === '娛樂城攻略' && path.startsWith('/blog')) || (label === '3A 專區' && path === '/3a')
   return <>
     <header className="site-header"><div className="header-inner">
-      <button className="brand" onClick={() => go('/')} aria-label="回到首頁"><img src="/assets/brand-logo-3a.png" alt="3A 遊戲城" /></button>
+      <button className="brand" onClick={() => go('/')} aria-label="回到首頁"><img src={asset('brand-logo-3a.png')} alt="3A 遊戲城" /></button>
       <nav className="desktop-nav" aria-label="主要導覽">{links.map(([label, href]) => <button key={label} className={`${active(label) ? 'active' : ''} ${label === '3A 專區' ? 'threea-link' : ''}`} onClick={() => go(href)}>{label}</button>)}</nav>
       <div className="header-actions"><button className="header-control" onClick={onSearch}>搜尋</button><button className="header-control menu-trigger" onClick={() => setMenuOpen(true)}>選單</button></div>
     </div></header>
@@ -97,7 +106,7 @@ function SectionHeader({ label, title, description, action }) {
 }
 
 function Hero({ navigate }) {
-  return <section className="hero"><div className="hero-inner"><div className="hero-copy"><span className="eyebrow">3A GAME INFORMATION PORTAL</span><h1><span>3A 遊戲城</span>娛樂資訊專區</h1><i className="orange-rule" aria-hidden="true" /><p>本站提供娛樂城評價、現金版推薦、世界盃即時比分、USDT 娛樂城教學與玩家真實討論內容，協助讀者快速掌握熱門娛樂平台與最新賽事資訊。</p><div className="button-row"><button className="button primary" onClick={() => navigate('/casino-recommendations')}>查看娛樂城推薦</button><button className="button secondary" onClick={() => document.getElementById('games')?.scrollIntoView({ behavior: 'smooth' })}>熱門遊戲攻略</button></div><div className="topic-cards"><button onClick={() => navigate('/casino-recommendations')}><strong>娛樂城</strong><small>評價與推薦</small></button><button onClick={() => document.getElementById('worldcup')?.scrollIntoView({ behavior: 'smooth' })}><strong>世界盃</strong><small>即時比分與賽事</small></button><button onClick={() => document.getElementById('crypto')?.scrollIntoView({ behavior: 'smooth' })}><strong>USDT</strong><small>加密娛樂城指南</small></button><button onClick={() => navigate('/blog')}><strong>論壇</strong><small>玩家經驗交流</small></button></div><p className="legal-note">提醒：請遵守所在地法律規範，年滿合法年齡並量力而為。</p></div><div className="hero-image"><img src="/assets/portal-hero.webp" alt="戰神賽特電子遊戲主視覺" /></div></div></section>
+  return <section className="hero"><div className="hero-inner"><div className="hero-copy"><span className="eyebrow">3A GAME INFORMATION PORTAL</span><h1><span>3A 遊戲城</span>娛樂資訊專區</h1><i className="orange-rule" aria-hidden="true" /><p>本站提供娛樂城評價、現金版推薦、世界盃即時比分、USDT 娛樂城教學與玩家真實討論內容，協助讀者快速掌握熱門娛樂平台與最新賽事資訊。</p><div className="button-row"><button className="button primary" onClick={() => navigate('/casino-recommendations')}>查看娛樂城推薦</button><button className="button secondary" onClick={() => document.getElementById('games')?.scrollIntoView({ behavior: 'smooth' })}>熱門遊戲攻略</button></div><div className="topic-cards"><button onClick={() => navigate('/casino-recommendations')}><strong>娛樂城</strong><small>評價與推薦</small></button><button onClick={() => document.getElementById('worldcup')?.scrollIntoView({ behavior: 'smooth' })}><strong>世界盃</strong><small>即時比分與賽事</small></button><button onClick={() => document.getElementById('crypto')?.scrollIntoView({ behavior: 'smooth' })}><strong>USDT</strong><small>加密娛樂城指南</small></button><button onClick={() => navigate('/blog')}><strong>論壇</strong><small>玩家經驗交流</small></button></div><p className="legal-note">提醒：請遵守所在地法律規範，年滿合法年齡並量力而為。</p></div><div className="hero-image"><img src={asset('portal-hero.webp')} alt="戰神賽特電子遊戲主視覺" /></div></div></section>
 }
 
 function CasinoCard({ casino, navigate }) {
@@ -139,7 +148,7 @@ function CryptoSection({ navigate }) {
 }
 
 function ThreeAPreview({ navigate }) {
-  return <section className="threea-preview section-shell"><div className="threea-preview-art"><img src="/assets/threea-hero.png" alt="3A 吉祥物與遊戲圖示" /></div><div><span className="threea-kicker">NEW · 3A FEATURED ZONE</span><h2>3A 專區</h2><p>3A 專區獨立整理平台特色、熱門遊戲、活動條款與常見問題，並以冷藍識別與全站的橘色資訊內容清楚區隔。</p><div className="button-row"><button className="button blue" onClick={() => navigate('/3a')}>前往 3A 專區</button><button className="button blue-outline" onClick={() => navigate('/blog')}>先看攻略文章</button></div></div></section>
+  return <section className="threea-preview section-shell"><div className="threea-preview-art"><img src={asset('threea-hero.png')} alt="3A 吉祥物與遊戲圖示" /></div><div><span className="threea-kicker">NEW · 3A FEATURED ZONE</span><h2>3A 專區</h2><p>3A 專區獨立整理平台特色、熱門遊戲、活動條款與常見問題，並以冷藍識別與全站的橘色資訊內容清楚區隔。</p><div className="button-row"><button className="button blue" onClick={() => navigate('/3a')}>前往 3A 專區</button><button className="button blue-outline" onClick={() => navigate('/blog')}>先看攻略文章</button></div></div></section>
 }
 
 function FAQ() {
@@ -153,7 +162,7 @@ function HomePage({ navigate }) {
 
 function CasinoRecommendationsPage({ navigate }) {
   const criteria = [['01', '資訊透明', '檢查官方網址、客服、活動條款與平台資訊是否清楚可查。'], ['02', '出金流程', '比較審核條件、預估時間與常見限制，不只看單一速度數字。'], ['03', '遊戲內容', '確認真人、體育、電子與供應商是否符合自己的使用需求。'], ['04', '支付方式', '比較現金、銀行轉帳與 USDT 等方式的流程、費用與風險。']]
-  return <main className="recommendation-page"><section className="recommendation-hero"><div className="section-shell recommendation-hero-inner"><div><span className="eyebrow">CASINO RECOMMENDATIONS</span><h1>娛樂城推薦</h1><p>依照平台資訊透明度、出金流程、遊戲內容與玩家討論整理熱門選擇。先理解差異，再選擇符合需求的平台。</p><div className="button-row"><button className="button primary" onClick={() => document.getElementById('recommendation-ranking')?.scrollIntoView({ behavior: 'smooth' })}>查看推薦排行</button><button className="button secondary" onClick={() => document.getElementById('recommendation-method')?.scrollIntoView({ behavior: 'smooth' })}>了解評選方式</button></div></div><img src="/assets/portal-hero.webp" alt="娛樂城遊戲主視覺" /></div></section><section className="section-shell recommendation-method" id="recommendation-method"><SectionHeader label="HOW WE REVIEW" title="四個評選重點" description="推薦頁與文章頁分開呈現：這裡先提供快速比較，再連到各平台的完整評價內容。" /><div className="criteria-grid">{criteria.map(([no, title, text]) => <article key={no}><span>{no}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section><section className="recommendation-ranking" id="recommendation-ranking"><div className="section-shell"><SectionHeader label="EDITOR'S PICKS" title="熱門娛樂城推薦排行" description="以下排序依資訊完整度、玩家討論熱度與使用流程綜合整理；實際條件請以各平台最新公告為準。" /><div className="casino-grid">{casinos.map((casino) => <CasinoCard key={casino.name} casino={casino} navigate={navigate} />)}</div></div></section><section className="section-shell comparison-section"><SectionHeader label="QUICK COMPARISON" title="三家平台快速比較" description="用同一組欄位比較平台定位、支付方式與主要特色。" /><div className="comparison-table" role="table" aria-label="娛樂城推薦比較"><div className="comparison-row comparison-head" role="row"><span>平台</span><span>定位</span><span>主要特色</span><span>玩家評價</span></div>{casinos.map((casino) => <div className="comparison-row" role="row" key={casino.name}><strong>{casino.name}</strong><span>{casino.facts[0][1]}</span><span>{casino.facts[2][1]}</span><span>{casino.facts[3][1]}</span></div>)}</div></section><section className="section-shell recommendation-checklist"><div><span className="eyebrow">BEFORE YOU CHOOSE</span><h2>選擇前再確認一次</h2><p>平台是否適合，取決於所在地規範、付款方式、條款與個人使用需求。不要只看優惠或單一評價。</p></div><ul><li>核對官方網址與客服聯絡方式</li><li>閱讀存提款及活動流水條件</li><li>設定可負擔的娛樂預算</li><li>確認已符合所在地法定年齡與規範</li></ul></section><section className="section-shell faq-section"><SectionHeader label="RECOMMENDATION FAQ" title="娛樂城挑選常見問題" /><FAQ /></section><section className="final-cta section-shell"><div><h2>想深入了解平台差異？</h2><p>閱讀完整娛樂城評價、付款教學與玩家討論。</p></div><button className="button light" onClick={() => navigate('/blog')}>瀏覽攻略文章</button></section></main>
+  return <main className="recommendation-page"><section className="recommendation-hero"><div className="section-shell recommendation-hero-inner"><div><span className="eyebrow">CASINO RECOMMENDATIONS</span><h1>娛樂城推薦</h1><p>依照平台資訊透明度、出金流程、遊戲內容與玩家討論整理熱門選擇。先理解差異，再選擇符合需求的平台。</p><div className="button-row"><button className="button primary" onClick={() => document.getElementById('recommendation-ranking')?.scrollIntoView({ behavior: 'smooth' })}>查看推薦排行</button><button className="button secondary" onClick={() => document.getElementById('recommendation-method')?.scrollIntoView({ behavior: 'smooth' })}>了解評選方式</button></div></div><img src={asset('portal-hero.webp')} alt="娛樂城遊戲主視覺" /></div></section><section className="section-shell recommendation-method" id="recommendation-method"><SectionHeader label="HOW WE REVIEW" title="四個評選重點" description="推薦頁與文章頁分開呈現：這裡先提供快速比較，再連到各平台的完整評價內容。" /><div className="criteria-grid">{criteria.map(([no, title, text]) => <article key={no}><span>{no}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section><section className="recommendation-ranking" id="recommendation-ranking"><div className="section-shell"><SectionHeader label="EDITOR'S PICKS" title="熱門娛樂城推薦排行" description="以下排序依資訊完整度、玩家討論熱度與使用流程綜合整理；實際條件請以各平台最新公告為準。" /><div className="casino-grid">{casinos.map((casino) => <CasinoCard key={casino.name} casino={casino} navigate={navigate} />)}</div></div></section><section className="section-shell comparison-section"><SectionHeader label="QUICK COMPARISON" title="三家平台快速比較" description="用同一組欄位比較平台定位、支付方式與主要特色。" /><div className="comparison-table" role="table" aria-label="娛樂城推薦比較"><div className="comparison-row comparison-head" role="row"><span>平台</span><span>定位</span><span>主要特色</span><span>玩家評價</span></div>{casinos.map((casino) => <div className="comparison-row" role="row" key={casino.name}><strong>{casino.name}</strong><span>{casino.facts[0][1]}</span><span>{casino.facts[2][1]}</span><span>{casino.facts[3][1]}</span></div>)}</div></section><section className="section-shell recommendation-checklist"><div><span className="eyebrow">BEFORE YOU CHOOSE</span><h2>選擇前再確認一次</h2><p>平台是否適合，取決於所在地規範、付款方式、條款與個人使用需求。不要只看優惠或單一評價。</p></div><ul><li>核對官方網址與客服聯絡方式</li><li>閱讀存提款及活動流水條件</li><li>設定可負擔的娛樂預算</li><li>確認已符合所在地法定年齡與規範</li></ul></section><section className="section-shell faq-section"><SectionHeader label="RECOMMENDATION FAQ" title="娛樂城挑選常見問題" /><FAQ /></section><section className="final-cta section-shell"><div><h2>想深入了解平台差異？</h2><p>閱讀完整娛樂城評價、付款教學與玩家討論。</p></div><button className="button light" onClick={() => navigate('/blog')}>瀏覽攻略文章</button></section></main>
 }
 
 function ArticleCard({ article, navigate }) {
@@ -175,11 +184,11 @@ function ArticlePage({ id, navigate }) {
 
 function ThreeAPage({ navigate }) {
   const features = [['平台與帳戶安全', '確認網址、密碼與裝置安全的基本檢查。'], ['熱門遊戲分類', '從節奏與規則找到想先了解的遊戲。'], ['活動條款整理', '把期限、資格與流水條件拆成易讀重點。'], ['存提款流程', '整理常見方式、處理時間與注意事項。'], ['客服與常見問題', '快速找到官方管道與問題處理順序。'], ['理性娛樂提醒', '先設定預算與時間，再決定是否參與。']]
-  return <main className="threea-page"><section className="threea-hero"><div className="section-shell threea-hero-inner"><div><span className="threea-kicker">3A FEATURED ZONE</span><h1>3A 專區</h1><p>集中整理 3A 平台特色、熱門遊戲、活動條款與常見問題，提供清楚、好查找的專屬內容入口。</p><div className="button-row"><button className="button blue" onClick={() => document.getElementById('threea-content')?.scrollIntoView({ behavior: 'smooth' })}>查看專區內容</button><button className="button blue-outline" onClick={() => navigate('/blog')}>瀏覽攻略文章</button></div></div><img src="/assets/threea-hero.png" alt="3A 吉祥物與遊戲圖示" /></div></section><section className="section-shell content-section" id="threea-content"><SectionHeader label="3A INFORMATION GUIDE" title="六個先了解的重點" description="沿用整站的內容卡節奏，但以冷藍色清楚區隔 3A 專屬內容。" /><div className="threea-feature-grid">{features.map(([title, text], index) => <article key={title}><span>{String(index + 1).padStart(2, '0')}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section><section className="section-shell threea-games"><SectionHeader label="POPULAR GAMES IN 3A" title="3A 熱門遊戲分類" description="電子遊戲、真人百家樂、體育賽事、樂透與棋牌內容。" /><div className="threea-category-grid">{[['game-slots.webp','電子老虎機'],['game-baccarat.webp','真人百家樂'],['game-sports.webp','體育賽事'],['game-lottery.webp','樂透彩票'],['game-board.webp','棋牌遊戲']].map(([image, title]) => <button key={title} onClick={() => navigate('/blog')}><img src={`/assets/${image}`} alt="" /><strong>{title}</strong><span>查看入門攻略</span></button>)}</div></section><section className="section-shell faq-section"><SectionHeader label="3A FAQ" title="3A 專區常見問題" /><FAQ /></section></main>
+  return <main className="threea-page"><section className="threea-hero"><div className="section-shell threea-hero-inner"><div><span className="threea-kicker">3A FEATURED ZONE</span><h1>3A 專區</h1><p>集中整理 3A 平台特色、熱門遊戲、活動條款與常見問題，提供清楚、好查找的專屬內容入口。</p><div className="button-row"><button className="button blue" onClick={() => document.getElementById('threea-content')?.scrollIntoView({ behavior: 'smooth' })}>查看專區內容</button><button className="button blue-outline" onClick={() => navigate('/blog')}>瀏覽攻略文章</button></div></div><img src={asset('threea-hero.png')} alt="3A 吉祥物與遊戲圖示" /></div></section><section className="section-shell content-section" id="threea-content"><SectionHeader label="3A INFORMATION GUIDE" title="六個先了解的重點" description="沿用整站的內容卡節奏，但以冷藍色清楚區隔 3A 專屬內容。" /><div className="threea-feature-grid">{features.map(([title, text], index) => <article key={title}><span>{String(index + 1).padStart(2, '0')}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section><section className="section-shell threea-games"><SectionHeader label="POPULAR GAMES IN 3A" title="3A 熱門遊戲分類" description="電子遊戲、真人百家樂、體育賽事、樂透與棋牌內容。" /><div className="threea-category-grid">{[['game-slots.webp','電子老虎機'],['game-baccarat.webp','真人百家樂'],['game-sports.webp','體育賽事'],['game-lottery.webp','樂透彩票'],['game-board.webp','棋牌遊戲']].map(([image, title]) => <button key={title} onClick={() => navigate('/blog')}><img src={asset(image)} alt="" /><strong>{title}</strong><span>查看入門攻略</span></button>)}</div></section><section className="section-shell faq-section"><SectionHeader label="3A FAQ" title="3A 專區常見問題" /><FAQ /></section></main>
 }
 
 function Footer({ navigate }) {
-  return <footer className="site-footer"><div className="footer-inner"><div><img src="/assets/brand-logo-3a.png" alt="3A 遊戲城" /><p>3A 遊戲城 · 娛樂資訊專區<br />專注於娛樂城與遊戲資訊，協助成年讀者理性了解、審慎判斷。</p><span className="age-note">18+ 本站僅供 18 歲以上人士瀏覽</span></div><div><strong>探索</strong><button onClick={() => navigate('/casino-recommendations')}>娛樂城推薦</button><button onClick={() => navigate('/blog')}>娛樂城攻略</button><button onClick={() => navigate('/blog')}>遊戲攻略</button><button onClick={() => navigate('/3a')}>3A 專區</button></div><div><strong>關於本站</strong><button>關於我們</button><button>免責聲明</button><button>負責任博弈</button><button>隱私政策</button></div><div><strong>聯絡我們</strong><p>指正、意見或合作洽詢，請以官方公告的聯絡管道為準。</p><p>沉迷博弈可能造成傷害。如需協助，請撥打台灣 1925 安心專線。</p></div></div><div className="footer-bottom">© 2026 3A 遊戲城 UI Prototype．本站僅提供資訊，不經營博弈、不代收下注。</div></footer>
+  return <footer className="site-footer"><div className="footer-inner"><div><img src={asset('brand-logo-3a.png')} alt="3A 遊戲城" /><p>3A 遊戲城 · 娛樂資訊專區<br />專注於娛樂城與遊戲資訊，協助成年讀者理性了解、審慎判斷。</p><span className="age-note">18+ 本站僅供 18 歲以上人士瀏覽</span></div><div><strong>探索</strong><button onClick={() => navigate('/casino-recommendations')}>娛樂城推薦</button><button onClick={() => navigate('/blog')}>娛樂城攻略</button><button onClick={() => navigate('/blog')}>遊戲攻略</button><button onClick={() => navigate('/3a')}>3A 專區</button></div><div><strong>關於本站</strong><button>關於我們</button><button>免責聲明</button><button>負責任博弈</button><button>隱私政策</button></div><div><strong>聯絡我們</strong><p>指正、意見或合作洽詢，請以官方公告的聯絡管道為準。</p><p>沉迷博弈可能造成傷害。如需協助，請撥打台灣 1925 安心專線。</p></div></div><div className="footer-bottom">© 2026 3A 遊戲城 UI Prototype．本站僅提供資訊，不經營博弈、不代收下注。</div></footer>
 }
 
 export function App() {
